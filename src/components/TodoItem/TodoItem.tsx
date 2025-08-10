@@ -108,7 +108,7 @@ export const TodoItem: React.FC<Props> = ({
           onSubmit={async event => {
             event.preventDefault();
 
-            if (newTitle.trim() === originTitle || newTitle === '') {
+            if (newTitle.trim() === originTitle) {
               setIsEditingId(null);
               setNewTitle(originTitle);
 
@@ -116,7 +116,11 @@ export const TodoItem: React.FC<Props> = ({
             }
 
             setIsUpdating(true);
-            await handleUpdateTitle(isEditingId, newTitle);
+            try {
+              await handleUpdateTitle(isEditingId, newTitle);
+            } catch {
+              setIsEditingId(id);
+            }
 
             setIsEditingId(null);
             setIsUpdating(false);
@@ -124,7 +128,7 @@ export const TodoItem: React.FC<Props> = ({
           onBlur={async event => {
             event.preventDefault();
 
-            if (newTitle.trim() === originTitle || newTitle === '') {
+            if (newTitle.trim() === originTitle) {
               setIsEditingId(null);
               setNewTitle(originTitle);
 
@@ -132,7 +136,11 @@ export const TodoItem: React.FC<Props> = ({
             }
 
             setIsUpdating(true);
-            await handleUpdateTitle(isEditingId, newTitle.trim());
+            try {
+              await handleUpdateTitle(isEditingId, newTitle);
+            } catch {
+              setIsEditingId(id);
+            }
 
             setIsEditingId(null);
             setIsUpdating(false);

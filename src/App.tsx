@@ -36,7 +36,8 @@ export const App: React.FC = () => {
 
   const handleDelete = (id: number) => {
     setDeletedTodoId(id);
-    deleteTodos(id)
+
+    return deleteTodos(id)
       .then(() => {
         setAllTodos(prevTodos => prevTodos.filter(todo => todo.id !== id));
       })
@@ -124,7 +125,11 @@ export const App: React.FC = () => {
 
   const handleUpdateTitle = async (id: number, newTitle: string) => {
     if (newTitle.trim().length === 0) {
-      handleDelete(id);
+      try {
+        await handleDelete(id);
+      } catch {
+        setIsEditingId(id);
+      }
 
       return;
     }
