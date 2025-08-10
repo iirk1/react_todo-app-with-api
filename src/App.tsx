@@ -125,6 +125,7 @@ export const App: React.FC = () => {
   const handleUpdateTitle = async (id: number, newTitle: string) => {
     if (newTitle.trim().length === 0) {
       handleDelete(id);
+
       return;
     }
 
