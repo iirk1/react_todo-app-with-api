@@ -34,20 +34,23 @@ export const App: React.FC = () => {
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const handleDelete = (id: number) => {
+  const deleteFromServer = async (id: number) => {
+    return deleteTodos(id).catch(() => {
+      setErrorMessage('Unable to delete a todo');
+      throw Error('Unable to delete a todo');
+    });
+  };
+
+  const handleDelete = async (id: number) => {
     setDeletedTodoId(id);
 
-    return deleteTodos(id)
-      .then(() => {
-        setAllTodos(prevTodos => prevTodos.filter(todo => todo.id !== id));
-      })
-      .catch(() => {
-        setErrorMessage('Unable to delete a todo');
-      })
-      .finally(() => {
-        setDeletedTodoId(null);
-        inputRef.current?.focus();
-      });
+    try {
+      await deleteFromServer(id);
+      setAllTodos(prev => prev.filter(todo => todo.id !== id));
+    } finally {
+      setDeletedTodoId(null);
+      inputRef.current?.focus();
+    }
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -126,7 +129,8 @@ export const App: React.FC = () => {
   const handleUpdateTitle = async (id: number, newTitle: string) => {
     if (newTitle.trim().length === 0) {
       try {
-        await handleDelete(id);
+        await deleteFromServer(id);
+        setAllTodos(prev => prev.filter(todo => todo.id !== id));
       } catch {
         setIsEditingId(id);
       }
@@ -143,8 +147,10 @@ export const App: React.FC = () => {
         ),
       );
     } catch {
-      setIsEditingId(id);
+      // setIsEditingId(id);
+
       setErrorMessage('Unable to update a todo');
+      throw Error('Unable to update a todo');
     }
   };
 
