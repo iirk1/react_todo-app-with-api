@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { UserWarning } from './UserWarning';
 import {
   deleteTodos,
@@ -54,6 +54,7 @@ export const App: React.FC = () => {
       setDeletedTodoId(null);
       inputRef.current?.focus();
     }
+
     return;
   };
 
@@ -96,16 +97,16 @@ export const App: React.FC = () => {
       });
   };
 
-  const handleToggle = (updatingTodoId: number) => {
+  const handleToggle = (updatedTodoId: number) => {
     event?.preventDefault();
-    const toggleTodo = allTodos.find(todo => todo.id === updatingTodoId);
+    const toggleTodo = allTodos.find(todo => todo.id === updatedTodoId);
     const todoCompletedValue = toggleTodo?.completed;
 
-    toggleTodos(updatingTodoId, !todoCompletedValue)
+    toggleTodos(updatedTodoId, !todoCompletedValue)
       .then(() => {
         setAllTodos(prevTodos =>
           prevTodos.map(todo =>
-            todo.id === updatingTodoId
+            todo.id === updatedTodoId
               ? { ...todo, completed: !todoCompletedValue }
               : todo,
           ),
@@ -134,12 +135,11 @@ export const App: React.FC = () => {
     if (newTitle.trim().length === 0) {
       try {
         await deleteFromServer(id);
-        console.log('Successfully');
         setAllTodos(prev => prev.filter(todo => todo.id !== id));
       } catch {
-        console.log('Not Successfully');
         setIsEditingId(id);
         setErrorMessage('Unable to delete a todo');
+        throw Error();
       }
 
       return;
