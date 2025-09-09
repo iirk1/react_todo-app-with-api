@@ -117,17 +117,14 @@ export const TodoItem: React.FC<Props> = ({
               }
 
               setIsUpdating(true);
-              try {
-                await handleUpdateTitle(isEditingId, newTitle);
-                setIsEditingId(null);
-              } catch {
-                setIsEditingId(id);
-              }
+
+              await handleUpdateTitle(isEditingId, newTitle);
+              setIsEditingId(null);
             } catch {
               setIsEditingId(id);
+            } finally {
+              setIsUpdating(false);
             }
-
-            setIsUpdating(false);
           }}
           onBlur={async event => {
             event.preventDefault();
@@ -141,17 +138,14 @@ export const TodoItem: React.FC<Props> = ({
               }
 
               setIsUpdating(true);
-              try {
-                await handleUpdateTitle(isEditingId, newTitle);
-                setIsEditingId(null);
-              } catch {
-                setIsEditingId(id);
-              }
+
+              await handleUpdateTitle(isEditingId, newTitle);
+              setIsEditingId(null);
             } catch {
               setIsEditingId(id);
+            } finally {
+              setIsUpdating(false);
             }
-
-            setIsUpdating(false);
           }}
         >
           <input

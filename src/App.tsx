@@ -47,10 +47,14 @@ export const App: React.FC = () => {
     try {
       await deleteFromServer(id);
       setAllTodos(prev => prev.filter(todo => todo.id !== id));
+    } catch {
+      setErrorMessage('Unable to delete a todo');
+      // throw new Error();
     } finally {
       setDeletedTodoId(null);
       inputRef.current?.focus();
     }
+    return;
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -130,9 +134,12 @@ export const App: React.FC = () => {
     if (newTitle.trim().length === 0) {
       try {
         await deleteFromServer(id);
+        console.log('Successfully');
         setAllTodos(prev => prev.filter(todo => todo.id !== id));
       } catch {
+        console.log('Not Successfully');
         setIsEditingId(id);
+        setErrorMessage('Unable to delete a todo');
       }
 
       return;
@@ -147,8 +154,7 @@ export const App: React.FC = () => {
         ),
       );
     } catch {
-      // setIsEditingId(id);
-
+      setIsEditingId(id);
       setErrorMessage('Unable to update a todo');
       throw Error('Unable to update a todo');
     }
