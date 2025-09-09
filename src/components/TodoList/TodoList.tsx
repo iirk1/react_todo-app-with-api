@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import { Todo } from '../../types/Todo';
 import { SetStateAction } from 'react';
 import { TodoItem } from '../TodoItem/TodoItem';
